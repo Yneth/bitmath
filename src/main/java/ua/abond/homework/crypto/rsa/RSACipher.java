@@ -1,7 +1,8 @@
 package ua.abond.homework.crypto.rsa;
 
 import ua.abond.homework.crypto.Cipher;
-import ua.abond.homework.math.MyMath;
+import ua.abond.homework.crypto.util.ErrorHandlingUtil;
+import ua.abond.homework.math.Karatsuba;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -17,10 +18,14 @@ public class RSACipher implements Cipher {
     }
 
     public RSACipher(PrivateKey privateKey, PublicKey publicKey) {
+        ErrorHandlingUtil.checkIfNotNull(privateKey, "PrivateKey cannot be null.");
+        ErrorHandlingUtil.checkIfNotNull(publicKey, "PublicKey cannot be null.");
+
         this.privateKey = privateKey;
         this.publicKey = publicKey;
     }
 
+    @Override
     public byte[] encrypt(byte[] message) {
         return new BigInteger(message).modPow(
                 publicKey.getEncryptionExponent(),
@@ -28,6 +33,7 @@ public class RSACipher implements Cipher {
         ).toByteArray();
     }
 
+    @Override
     public byte[] decrypt(byte[] encrypted) {
         return new BigInteger(encrypted).modPow(
                 privateKey.getDecryptionExponent(),
@@ -40,14 +46,14 @@ public class RSACipher implements Cipher {
         BigInteger q = BigInteger.probablePrime(bitLength, random);
         BigInteger p = BigInteger.probablePrime(bitLength, random);
 
-        BigInteger n = MyMath.karatsuba(q, p);
+        BigInteger n = Karatsuba.multiply(q, p);
 
-        BigInteger totient = MyMath.karatsuba(
+        BigInteger totient = Karatsuba.multiply(
                 p.subtract(BigInteger.ONE),
                 q.subtract(BigInteger.ONE)
         );
 
-        BigInteger e = BigInteger.probablePrime(bitLength / 2, random);
+        BigInteger e = BigInteger.probablePrime(bitLength >> 1, random);
 
         if (e.signum() < 0) {
             e = e.negate();
