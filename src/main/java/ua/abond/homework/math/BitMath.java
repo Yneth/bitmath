@@ -6,19 +6,91 @@ public final class BitMath {
     }
 
     public static int sizeOf(byte x) {
-        return Byte.SIZE;
+        int res = 0;
+
+        byte val = 1;
+        while (val != 0) {
+            val <<= 1;
+            res = increment(res);
+        }
+        return res;
     }
 
     public static int sizeOf(short x) {
-        return Short.SIZE;
+        int res = 0;
+
+        short val = 1;
+        while (val != 0) {
+            val <<= 1;
+            res = increment(res);
+        }
+        return res;
     }
 
     public static int sizeOf(int x) {
-        return Integer.SIZE;
+        int res = 0;
+
+        int val = 1;
+        while (val != 0) {
+            val <<= 1;
+            res = increment(res);
+        }
+        return res;
     }
 
     public static int sizeOf(long x) {
-        return Long.SIZE;
+        int res = 0;
+
+        long val = 1;
+        while (val != 0) {
+            val <<= 1;
+            res = increment(res);
+        }
+        return res;
+    }
+
+    public static int negateBit(int num, int bitPos) {
+        if (bitPos < 0 || bitPos >= sizeOf(num)) {
+            throw new IllegalArgumentException("Pos argument should be between 0 and 32.");
+        }
+        int mask = 1 << bitPos;
+        return num ^ mask;
+    }
+
+    public static int gcd(int x, int y) {
+        int shift;
+
+        int u = abs(x);
+        int v = abs(y);
+        if (u == 0) {
+            return v;
+        }
+        if (v == 0) {
+            return u;
+        }
+
+        for (shift = 0; ((u | v) & 1) == 0; shift = increment(shift)) {
+            u >>= 1;
+            v >>= 1;
+        }
+
+        while ((u & 1) == 0) {
+            u >>= 1;
+        }
+        do {
+            while ((v & 1) == 0) {
+                v >>= 1;
+            }
+
+            if (u > v) {
+                int t = v;
+                v = u;
+                u = t;
+            }
+            v = subtract(v, u);
+        } while (v != 0);
+
+        return u << shift;
     }
 
     public static int maxBit(byte x) {
@@ -103,6 +175,14 @@ public final class BitMath {
         return result;
     }
 
+    public static int increment(int x) {
+        return add(x, 1);
+    }
+
+    public static long increment(long x) {
+        return add(x, 1);
+    }
+
     public static int subtract(int x, int y) {
         return add(x, negate(y));
     }
@@ -111,115 +191,156 @@ public final class BitMath {
         return add(x, negate(y));
     }
 
-    public static long remainder(long a, long divisor) {
-        long q = 0;
-        long r = abs(a);
-        long d = abs(divisor);
-        while (r >= d) {
-            r = subtract(r, d);
-            q = add(q, 1);
-        }
-        if (a < 0 && r > 0) {
-            r = subtract(d, r);
-            q = negate(add(q, 1));
-        }
-        return r;
+    public static int decrement(int x) {
+        return subtract(x, 1);
     }
 
-    public static int getBitLength(byte num) {
-        if (num == Byte.MIN_VALUE) {
-            return maxBit(num);
-        }
-        return getBitLength(maxBit(num), num);
-    }
-
-    public static int getBitLength(short num) {
-        if (num == Short.MIN_VALUE) {
-            return maxBit(num);
-        }
-        return getBitLength(maxBit(num), num);
-    }
-
-    public static int getBitLength(int num) {
-        if (num == Integer.MIN_VALUE) {
-            return maxBit(num);
-        }
-        return getBitLength(maxBit(num), num);
-    }
-
-    public static int getBitLength(long num) {
-        if (Long.MIN_VALUE == num) {
-            return maxBit(num);
-        }
-        return getBitLength(maxBit(num), num);
-    }
-
-    private static int getBitLength(int size, long num) {
-        if (num == 0) {
+    public static long multiply(long a, long b) {
+        if (a == 0 || b == 0) {
             return 0;
         }
-
-        long val = abs(num);
-        for (int i = size; i > 0; i--) {
-            if (((val >>> i) & 1) == 1) {
-                return add(i, 1);
+        if (bitLength(a) + bitLength(b) > sizeOf(a)) {
+            throw new IllegalArgumentException("Passed arguments are too big.");
+        }
+        long result = 0;
+        long x = a;
+        long y = b;
+        while (y != 0) {
+            if ((y & 1) != 0) {
+                result = add(result, x);
             }
+            x <<= 1;
+            y >>>= 1;
         }
-        return 1;
+        return result;
     }
 
-    public static int negateBit(int num, int bitPos) {
-        if (bitPos < 0) {
-            throw new IllegalArgumentException("Pos argument should be greater than 0.");
+    public static long pow(long x, long y) {
+        long temp;
+        if (y == 0)
+            return 1;
+        temp = pow(x, y >> 1);
+        if ((y & 1) != 0) {
+            return multiply(temp, temp);
         }
-        return num ^ (1 << bitPos);
+        if (y > 0) {
+            return multiply(multiply(x, temp), temp);
+        }
+        return divide(multiply(temp, temp), x);
     }
 
-    public static int gcd(int x, int y) {
-        int shift;
+    public static long remainder(long a, long divisor) {
+        long r = divide(a, divisor);
+        return subtract(a, multiply(r, divisor));
+    }
 
-        int u = abs(x);
-        int v = abs(y);
-
-        if (u == 0) {
-            return v;
+    public static long divide(long dividend, long divisor) {
+        if (divisor == 0) {
+            throw new IllegalArgumentException("Cannot divide by zero.");
         }
-        if (v == 0) {
-            return u;
-        }
+        long sign = multiply(sign(dividend), sign(divisor));
 
-        for (shift = 0; ((u | v) & 1) == 0; ++shift) {
-            u >>= 1;
-            v >>= 1;
-        }
+        long scaledDivisor = abs(divisor);
+        long remain = abs(dividend);
+        long result = 0;
+        long multiple = 1;
 
-        while ((u & 1) == 0) {
-            u >>= 1;
+        while (scaledDivisor < remain) {
+            scaledDivisor = scaledDivisor << 1;
+            multiple = multiple << 1;
         }
         do {
-            while ((v & 1) == 0) {
-                v >>= 1;
+            if (remain >= scaledDivisor) {
+                remain = subtract(remain, scaledDivisor);
+                result = add(result, multiple);
             }
+            scaledDivisor = scaledDivisor >> 1;
+            multiple = multiple >> 1;
+        } while (multiple != 0);
 
-            if (u > v) {
-                int t = v;
-                v = u;
-                u = t;
-            }
-            v = v - u;
-        } while (v != 0);
-
-        return u << shift;
+        if (sign < 0) {
+            result = negate(result);
+        }
+        return result;
     }
 
-    public static long gcd(long x, long y) {
-        long a = x;
-        long b = y;
-        while (b != 0) {
-            long aTemp = a;
-            a = b;
-            b = remainder(aTemp, b);
+    public static int bitLength(int res, int i) {
+        if (i == 0)
+            return 0;
+        int x = abs(i);
+        int n = res;
+        if (x >>> 16 == 0) {
+            n = subtract(n, 16);
+            x <<= 16;
         }
-        return a;
+        if (x >>> 24 == 0) {
+            n = subtract(n, 8);
+            x <<= 8;
+        }
+        if (x >>> 28 == 0) {
+            n = subtract(n, 4);
+            x <<= 4;
+        }
+        if (x >>> 30 == 0) {
+            n = subtract(n, 2);
+            x <<= 2;
+        }
+        if (x >>> 31 == 0) {
+            n = decrement(n);
+        }
+        return n;
+    }
+
+    public static int bitLength(byte i) {
+        int size = sizeOf(i);
+        if (i == minValue(i)) {
+            return size - 1;
+        }
+        return bitLength(size, i << 24);
+    }
+
+    public static int bitLength(short i) {
+        int size = sizeOf(i);
+        if (i == minValue(i)) {
+            return size - 1;
+        }
+        return bitLength(size, i << 16);
+    }
+
+    public static int bitLength(int i) {
+        int size = sizeOf(i);
+        if (i == minValue(i)) {
+            return size - 1;
+        }
+        return bitLength(size, i);
+    }
+
+    public static int bitLength(long i) {
+        int n = sizeOf(i);
+        if (i == minValue(i)) {
+            return n - 1;
+        }
+        int x = (int) (abs(i) >>> 32);
+        if (x == 0) {
+            n = subtract(n, 32);
+            x = (int) i;
+        }
+        return bitLength(n, x);
+    }
+
+    public static byte minValue(byte x) {
+        return (byte) negate(1 << decrement(sizeOf(x)));
+    }
+
+    public static short minValue(short x) {
+        return (short) negate(1 << decrement(sizeOf(x)));
+    }
+
+    public static int minValue(int x) {
+        return negate(1 << decrement(sizeOf(x)));
+    }
+
+    public static long minValue(long x) {
+        return negate(1L << decrement(sizeOf(x)));
     }
 }

@@ -9,6 +9,7 @@ public class SizeOfTest {
     @Test
     public void testSizeOfByteCornerCases() {
         byte zero = 0;
+
         assertEquals(8, BitMath.sizeOf(zero));
         assertEquals(8, BitMath.sizeOf(Byte.MAX_VALUE));
         assertEquals(8, BitMath.sizeOf(Byte.MIN_VALUE));

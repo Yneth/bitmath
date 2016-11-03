@@ -6,21 +6,21 @@ import java.math.BigInteger;
 
 public class PublicKey {
     private final BigInteger modulus;
-    private final BigInteger encryptionExponent;
+    private final BigInteger encryptionKey;
 
-    public PublicKey(BigInteger modulus, BigInteger exponent) {
+    public PublicKey(BigInteger modulus, BigInteger key) {
         ErrorHandlingUtil.checkIfNotNull(modulus, "Modulus cannot be null.");
-        ErrorHandlingUtil.checkIfNotNull(exponent, "EncryptionExponent cannot be null.");
+        ErrorHandlingUtil.checkIfNotNull(key, "EncryptionKey cannot be null.");
 
         this.modulus = modulus;
-        this.encryptionExponent = exponent;
+        this.encryptionKey = key;
     }
 
     public BigInteger getModulus() {
         return modulus;
     }
 
-    public BigInteger getEncryptionExponent() {
-        return encryptionExponent;
+    public BigInteger getEncryptionKey() {
+        return encryptionKey;
     }
 }

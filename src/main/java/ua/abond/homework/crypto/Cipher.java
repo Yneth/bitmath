@@ -1,6 +1,6 @@
 package ua.abond.homework.crypto;
 
 public interface Cipher {
-    byte[] encrypt(byte[] message);
-    byte[] decrypt(byte[] encrypted);
+    byte[] encrypt(String message);
+    String decrypt(byte[] encrypted);
 }

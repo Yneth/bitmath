@@ -23,6 +23,12 @@ public class AbsTest {
     public void testIntAbs() {
         assertEquals(3, BitMath.abs(3));
         assertEquals(3, BitMath.abs(-3));
+        assertEquals(312, BitMath.abs(-312));
+        assertEquals(432432423, BitMath.abs(-432432423));
+        assertEquals(21312321, BitMath.abs(-21312321));
+        assertEquals(37489584, BitMath.abs(-37489584));
+        assertEquals(85857738, BitMath.abs(-85857738));
+        assertEquals(35876939, BitMath.abs(-35876939));
     }
 
     @Test
