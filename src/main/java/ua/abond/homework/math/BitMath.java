@@ -62,11 +62,8 @@ public final class BitMath {
 
         int u = abs(x);
         int v = abs(y);
-        if (u == 0) {
-            return v;
-        }
-        if (v == 0) {
-            return u;
+        if (u == 0 || v == 0) {
+            throw new IllegalArgumentException("None of the arguments can be equal to zero.");
         }
 
         for (shift = 0; ((u | v) & 1) == 0; shift = increment(shift)) {
@@ -215,19 +212,22 @@ public final class BitMath {
         return result;
     }
 
-    public static long pow(long x, long y) {
-        long temp;
-        if (y == 0)
-            return 1;
-        temp = pow(x, y >> 1);
-        if ((y & 1) != 0) {
-            return multiply(temp, temp);
+    public static long pow(long value, long exponent) {
+        long a = exponent;
+        long b = value;
+        long result = 1;
+        while (a > 1) {
+            if ((a & 1) != 0) {
+                result = multiply(result, b);
+            }
+            b = multiply(b, b);
+            a >>= 1;
         }
-        if (y > 0) {
-            return multiply(multiply(x, temp), temp);
+        if (a > 0) {
+            result = multiply(result, b);
         }
-        return divide(multiply(temp, temp), x);
-    }
+        return result;
+     }
 
     public static long remainder(long a, long divisor) {
         long r = divide(a, divisor);
@@ -238,6 +238,10 @@ public final class BitMath {
         if (divisor == 0) {
             throw new IllegalArgumentException("Cannot divide by zero.");
         }
+        if (divisor == 1) {
+            return dividend;
+        }
+
         long sign = multiply(sign(dividend), sign(divisor));
 
         long scaledDivisor = abs(divisor);
