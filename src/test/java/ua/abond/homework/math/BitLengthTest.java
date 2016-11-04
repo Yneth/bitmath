@@ -6,17 +6,16 @@ import java.math.BigInteger;
 
 import static org.junit.Assert.assertEquals;
 
-// TODO: more tests
 public class BitLengthTest {
 
     @Test
-    public void testByteBitLength() {
+    public void testByteBitLength() throws Exception {
         byte value = 0;
         assertEquals(0, BitMath.bitLength(value));
     }
 
     @Test
-    public void testByteBitLengthNegative() {
+    public void testByteBitLengthNegative() throws Exception {
         byte value = -1;
         assertEquals(1, BitMath.bitLength(value));
         value = -100;
@@ -24,7 +23,7 @@ public class BitLengthTest {
     }
 
     @Test
-    public void testByteBitLengthCornerCases() {
+    public void testByteBitLengthCornerCases() throws Exception {
         byte value = 1;
         assertEquals(1, BitMath.bitLength(value));
         value = 0;
@@ -34,13 +33,13 @@ public class BitLengthTest {
     }
 
     @Test
-    public void testShortBitLength() {
+    public void testShortBitLength() throws Exception {
         short value = 0;
         assertEquals(0, BitMath.bitLength(value));
     }
 
     @Test
-    public void testShortBitLengthCornerCases() {
+    public void testShortBitLengthCornerCases() throws Exception {
         short value = 1;
         assertEquals(1, BitMath.bitLength(value));
         value = 0;
@@ -53,7 +52,7 @@ public class BitLengthTest {
     }
 
     @Test
-    public void testIntegerBitLength() {
+    public void testIntegerBitLength() throws Exception {
         int value = 0;
         assertEquals(0, BitMath.bitLength(value));
         assertEquals(BigInteger.valueOf(3213123).bitLength(), BitMath.bitLength(3213123));
@@ -66,7 +65,7 @@ public class BitLengthTest {
     }
 
     @Test
-    public void testIntegerBitLengthCornerCases() {
+    public void testIntegerBitLengthCornerCases() throws Exception {
         int value = 1;
         assertEquals(1, BitMath.bitLength(value));
         value = 0;
@@ -77,7 +76,7 @@ public class BitLengthTest {
     }
 
     @Test
-    public void testLongBitLength() {
+    public void testLongBitLength() throws Exception {
         long value = 0;
         assertEquals(0, BitMath.bitLength(value));
         assertEquals(BigInteger.valueOf(60782178934893L).bitLength(), BitMath.bitLength(60782178934893L));
@@ -91,7 +90,7 @@ public class BitLengthTest {
     }
 
     @Test
-    public void testLongBitLengthCornerCases() {
+    public void testLongBitLengthCornerCases() throws Exception {
         assertEquals(1, BitMath.bitLength(1L));
         assertEquals(0, BitMath.bitLength(0L));
         assertEquals(1, BitMath.bitLength(-1L));

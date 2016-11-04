@@ -4,6 +4,7 @@ import org.junit.Test;
 import ua.abond.homework.crypto.Cipher;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,8 +22,26 @@ public class RSACipherTest {
         new RSACipher(kp.getPrivateKey(), null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testEncryptMessageTooBig() throws Exception {
+        Cipher cipher = new RSACipher(24);
+
+        String msg = "5371huidsbfuy sg87213jnfuisd iy1";
+
+        cipher.encrypt(msg);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDecryptMessageTooBig() throws Exception {
+        Cipher cipher = new RSACipher(24);
+
+        String msg = "5371huidsbfuy sg87213jnfuisd iy1";
+
+        cipher.decrypt(msg.getBytes());
+    }
+
     @Test
-    public void testGenerateKeys() {
+    public void testGenerateKeys() throws Exception {
         KeyPair kp = KeyPair.generateRSAKeys(256);
         PrivateKey privateKey = kp.getPrivateKey();
         PublicKey publicKey = kp.getPublicKey();
@@ -35,15 +54,7 @@ public class RSACipherTest {
     }
 
     @Test
-    public void testDecrypt() throws Exception {
-        Cipher cipher = new RSACipher(16);
-        String message = "Encrypted message";
-        byte[] encrypted = cipher.encrypt(message);
-        assertEquals(message, cipher.decrypt(encrypted));
-    }
-
-    @Test
-    public void testDecryptPredefinedCases() {
+    public void testDecryptPredefinedCases() throws Exception {
         BigInteger n = BigInteger.valueOf(3233);
         BigInteger e = BigInteger.valueOf(17);
         BigInteger d = BigInteger.valueOf(2753);
@@ -52,11 +63,11 @@ public class RSACipherTest {
         PrivateKey privateKey = new PrivateKey(n, d);
         Cipher cipher = new RSACipher(privateKey, publicKey);
 
-        String message = "2753321321312";
+        String message = "0";
         byte[] encrypted = cipher.encrypt(message);
-        byte[] expectedEncryption = {11, 40};
-        BigInteger i = new BigInteger(encrypted);
+        byte[] expectedEncryption = {2, 112};
+
+        assertTrue(Arrays.equals(expectedEncryption, encrypted));
         assertEquals(message, cipher.decrypt(encrypted));
     }
-
 }

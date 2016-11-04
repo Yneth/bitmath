@@ -7,13 +7,13 @@ import static org.junit.Assert.assertEquals;
 public class AddTest {
 
     @Test
-    public void testAdd() {
+    public void testAdd() throws Exception {
         assertEquals(54331246, BitMath.add(27165623, 27165623));
         assertEquals(74820, BitMath.add(18705, BitMath.add(18705, BitMath.add(18705, 18705))));
     }
 
     @Test
-    public void testAdditionOfNegativeValues() {
+    public void testAdditionOfNegativeValues() throws Exception {
         assertEquals(11, BitMath.add(12, -1));
         assertEquals(2, BitMath.add(33123122, -33123120));
 
@@ -25,7 +25,7 @@ public class AddTest {
     }
 
     @Test
-    public void testCornerCasesOfAdd() {
+    public void testCornerCasesOfAdd() throws Exception {
         assertEquals(Integer.MIN_VALUE, BitMath.add(Integer.MIN_VALUE, 0));
         assertEquals(Integer.MIN_VALUE, BitMath.add(0, Integer.MIN_VALUE));
 

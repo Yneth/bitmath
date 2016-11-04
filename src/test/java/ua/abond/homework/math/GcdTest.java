@@ -6,8 +6,18 @@ import static org.junit.Assert.assertEquals;
 
 public class GcdTest {
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testGcdWithSecondArgZero() throws Exception {
+        assertEquals(21, BitMath.gcd(21, 0));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGcdWithFirstArgZero() throws Exception {
+        assertEquals(21, BitMath.gcd(0, 21));
+    }
+
     @Test
-    public void testGcd() {
+    public void testGcd() throws Exception {
         assertEquals(4, BitMath.gcd(3832, 84));
         assertEquals(8, BitMath.gcd(312, 32));
         assertEquals(21, BitMath.gcd(231, 21));
@@ -21,7 +31,7 @@ public class GcdTest {
     }
 
     @Test
-    public void testGcdWithNegativeValues() {
+    public void testGcdWithNegativeValues() throws Exception {
         assertEquals(7, BitMath.gcd(21, -14));
         assertEquals(4, BitMath.gcd(-32132, 32));
         assertEquals(1, BitMath.gcd(56783, -52));
@@ -31,13 +41,7 @@ public class GcdTest {
     }
 
     @Test
-    public void testGcdWithZero() {
-        assertEquals(21, BitMath.gcd(21, 0));
-        assertEquals(21, BitMath.gcd(0, 21));
-    }
-
-    @Test
-    public void testGcdWithOne() {
+    public void testGcdWithOne() throws Exception {
         assertEquals(1, BitMath.gcd(21, 1));
         assertEquals(1, BitMath.gcd(-321321, 1));
         assertEquals(1, BitMath.gcd(1, 6214325));
