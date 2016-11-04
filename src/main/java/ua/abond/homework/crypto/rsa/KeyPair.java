@@ -1,7 +1,6 @@
 package ua.abond.homework.crypto.rsa;
 
 import ua.abond.homework.crypto.util.ErrorHandlingUtil;
-import ua.abond.homework.math.BitMath;
 import ua.abond.homework.math.Karatsuba;
 
 import java.math.BigInteger;
@@ -39,6 +38,11 @@ public class KeyPair {
 
         BigInteger modulus = Karatsuba.multiply(p, q);
         BigInteger publicKey = BigInteger.probablePrime(bitLength >> 1, random);
+
+        while (!phi.gcd(publicKey).equals(BigInteger.ONE)) {
+            publicKey = publicKey.nextProbablePrime();
+        }
+
         BigInteger privateKey = publicKey.modInverse(phi);
 
         return new KeyPair(
