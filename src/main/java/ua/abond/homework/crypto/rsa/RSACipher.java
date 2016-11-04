@@ -33,6 +33,12 @@ public class RSACipher implements Cipher {
 
     @Override
     public byte[] encrypt(String message) {
+        BigInteger msg = new BigInteger(message.getBytes());
+
+        if (msg.compareTo(publicKey.getModulus()) >= 0) {
+            throw new IllegalArgumentException("Passed message is too big.");
+        }
+
         return new BigInteger(message.getBytes()).modPow(
                 publicKey.getEncryptionKey(),
                 publicKey.getModulus()
@@ -41,6 +47,12 @@ public class RSACipher implements Cipher {
 
     @Override
     public String decrypt(byte[] encrypted) {
+        BigInteger encryptedMsg = new BigInteger(encrypted);
+
+        if (encryptedMsg.compareTo(publicKey.getModulus()) >= 0) {
+            throw new IllegalArgumentException("Passed message is too big.");
+        }
+
         return new String(new BigInteger(encrypted).modPow(
                 privateKey.getDecryptionKey(),
                 privateKey.getModulus()
