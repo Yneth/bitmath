@@ -24,7 +24,7 @@ public class RSACipherTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testEncryptMessageTooBig() throws Exception {
-        Cipher cipher = new RSACipher(24);
+        Cipher cipher = RSACipher.create(24);
 
         String msg = "5371huidsbfuy sg87213jnfuisd iy1";
 
@@ -33,7 +33,7 @@ public class RSACipherTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testDecryptMessageTooBig() throws Exception {
-        Cipher cipher = new RSACipher(24);
+        Cipher cipher = RSACipher.create(24);
 
         String msg = "5371huidsbfuy sg87213jnfuisd iy1";
 
