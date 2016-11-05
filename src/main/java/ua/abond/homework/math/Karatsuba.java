@@ -10,9 +10,7 @@ public final class Karatsuba {
     }
 
     public static long multiply(long x, long y) {
-        int xBitLength = BitMath.bitLength(x);
-        int yBitLength = BitMath.bitLength(x);
-        if (xBitLength + yBitLength > BitMath.sizeOf(x)) {
+        if (BitMath.bitLength(x) + BitMath.bitLength(y) > BitMath.sizeOf(x)) {
             throw new IllegalArgumentException("Passed parameters are too big.");
         }
         return multiplyInner(x, y);
