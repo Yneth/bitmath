@@ -49,7 +49,7 @@ public final class BitMath {
         return res;
     }
 
-    public static int negateBit(int num, int bitPos) {
+    public static int toggleBit(int num, int bitPos) {
         if (bitPos < 0 || bitPos >= sizeOf(num)) {
             throw new IllegalArgumentException("Pos argument should be between 0 and 32.");
         }
@@ -273,23 +273,17 @@ public final class BitMath {
             return 0;
         int x = abs(i);
         int n = res;
-        if (x >>> 16 == 0) {
-            n = subtract(n, 16);
-            x <<= 16;
+        int size = sizeOf(x);
+        int shift = 16;
+        while ((shift & increment(shift)) != 0) {
+            if (x >>> shift == 0) {
+                int s = subtract(size, shift);
+                n = subtract(n, s);
+                x <<= s;
+            }
+            shift |= (shift >> 1);
         }
-        if (x >>> 24 == 0) {
-            n = subtract(n, 8);
-            x <<= 8;
-        }
-        if (x >>> 28 == 0) {
-            n = subtract(n, 4);
-            x <<= 4;
-        }
-        if (x >>> 30 == 0) {
-            n = subtract(n, 2);
-            x <<= 2;
-        }
-        if (x >>> 31 == 0) {
+        if (x >>> shift == 0) {
             n = decrement(n);
         }
         return n;
